@@ -13,7 +13,7 @@ public interface PermissionRepository extends BaseRepository<Permission, Long> {
     @Query("SELECT p FROM Permission p WHERE p.idPermission = ?1")
     Permission getByID(Long id);
 
-    @Query("SELECT p FROM Permission p WHERE p.estado = 1 order by p.descripcion")
+    @Query("SELECT p FROM Permission p WHERE p.status = 1 order by p.descripcion")
     List<Permission> list();
 
     @Query("SELECT p FROM Permission p order by p.descripcion")

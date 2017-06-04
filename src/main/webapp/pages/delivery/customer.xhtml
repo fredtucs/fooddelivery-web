@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ph="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:of="http://omnifaces.org/functions"
+                template="/templates/layout/main-layout.xhtml">
+    <f:metadata>
+        <f:viewAction action="#{customerBean.listar}"/>
+    </f:metadata>
+    <ui:define name="content">
+
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="pull-right">
+                    <h:form>
+                        <h:commandLink class="btn btn-primary" title="#{msg.nuevo}">
+                            <i class="fa fa-plus"/>
+                            <p:ajax listener="#{customerBean.nuevo}" update=":fmEditCustomer" oncomplete="handleSubmitShow(xhr, status, args, 'dlgEditCustomer')"/>
+                        </h:commandLink>
+                    </h:form>
+                </div>
+                <h1>#{msg.customer}</h1>
+                <ul class="breadcrumb">
+                    <li><a jsf:outcome="/pages/home.html">#{msg.inicio}</a></li>
+                    <li class="active">#{msg.customer}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <h:form id="fmCustomers">
+                <p:messages id="messages" closable="true" globalOnly="true"/>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-list"/> #{msg.listade} #{msg.customer}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <p:dataTable id="dtCustomers" var="cs" reflow="true"
+                                         tableStyleClass="table table-bordered table-hover"
+                                         value="#{customerBean.customerList}"
+                                         rowKey="#{cs.customerId}" rowIndexVar="rowIndex"
+                                         selection="#{customerBean.customer}"
+                                         selectionMode="single" rows="15" paginator="true" paginatorPosition="bottom">
+
+                                <p:column headerText="#{of:format1(msg.nombre, 2)}" width="20%">
+                                    <h:outputText value="#{cs.name}" style="white-space:normal;"/>
+                                </p:column>
+
+                                <p:column headerText="#{msg.surname}" width="auto">
+                                    <h:outputText value="#{cs.surname}" style="white-space:normal;"/>
+                                </p:column>
+
+                                <p:column headerText="#{msg.email}" width="auto">
+                                    <h:outputText value="#{cs.email}" style="white-space:normal;"/>
+                                </p:column>
+
+                                <p:column headerText="#{msg.username}" width="auto">
+                                    <h:outputText value="#{cs.userName}" style="white-space:normal;"/>
+                                </p:column>
+
+                                <p:column headerText="#{msg.birthdate}" width="auto">
+                                    <h:outputText value="#{cs.birthdate}" style="white-space:normal;"/>
+                                </p:column>
+
+                                <p:column headerText="..." width="10%"
+                                          style="text-align:center">
+                                    <h:commandLink styleClass="btn btn-default btn-xs" action="#{customerBean.listAddress}" title="#{of:format1(msg.address, 2)}">
+                                        <f:passThroughAttribute name="data-toggle" value="tooltip"/>
+                                        <i class="fa fa-address-book-o" aria-hidden="true"/>
+                                        <f:setPropertyActionListener target="#{customerBean.customer}" value="#{cs}"/>
+                                        <p:ajax process="@this" oncomplete="handleSubmitShow(xhr, status, args, 'dlgListAddressCustomer')"
+                                                update=":fmListAddressCustomer"/>
+                                    </h:commandLink>
+
+                                    <h:commandLink styleClass="btn btn-default btn-xs" action="#{customerBean.editar}" title="#{msg.editar}">
+                                        <f:passThroughAttribute name="data-toggle" value="tooltip"/>
+                                        <i class="fa fa-pencil" aria-hidden="true"/>
+                                        <f:setPropertyActionListener target="#{customerBean.customer}" value="#{cs}"/>
+                                        <p:ajax process="@this" oncomplete="handleSubmitShow(xhr, status, args, 'dlgEditCustomer')"
+                                                update="dtCustomers :fmEditCustomer"/>
+                                    </h:commandLink>
+
+                                    <span data-toggle="tooltip" title="#{msg.eliminar}">
+                                    <h:commandLink styleClass="btn btn-default btn-xs btnConfirmDelete" ph:data-index="#{cs.customerId}"
+                                                   ph:data-entity-id="#{cs.name}" ph:data-message="#{msg.msgEliminar}"
+                                                   ph:data-toggle="modal" ph:data-target="#dlgConfirmDelete">
+                                        <i class="fa fa-trash" aria-hidden="true"/>
+                                        <p:ajax process="@this" update=":fmConfirmDelete"/>
+                                    </h:commandLink>
+                                    </span>
+
+                                </p:column>
+
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </div>
+
+        <!-- Modal Dialog -->
+        <div class="modal draggable fade modalConfirmDelete" id="dlgConfirmDelete" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <h:form role="form" id="fmConfirmDelete">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#215;</button>
+                            <h4 class="modal-title">#{msg.eliminar} #{msg.customer}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="index" name="index"/>
+                            <p></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">#{msg.cancelar}</button>
+                            <h:commandLink styleClass="btn btn-danger" action="#{customerBean.eliminar}">
+                                <i class="fa fa-pencil" aria-hidden="true"/> #{msg.eliminar}
+                                <p:ajax process="fmConfirmDelete" oncomplete="handleSubmitHide(xhr, status, args, 'dlgConfirmDelete')"/>
+                            </h:commandLink>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal draggable fade modalForm" id="dlgEditCustomer" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+
+                <div class="modal-content">
+                    <h:form id="fmEditCustomer" styleClass="form-horizontal">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+                            <h4 class="modal-title"><i class="fa fa-edit"/> #{msg.registro} #{msg.customer}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p:messages id="messagesfm" closable="true"/>
+                            <div class="form-group form-group-sm">
+                                <p:outputLabel styleClass="control-label col-sm-3" for="txtName" value="#{of:format1(msg.nombre, 2)}"/>
+                                <div class="col-sm-9">
+                                    <h:inputText styleClass="form-control" id="txtName" required="true" style="text-transform:uppercase;"
+                                                 value="#{customerBean.customer.name}" converter="toUpperCaseConverter"/>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <p:outputLabel styleClass="control-label col-sm-3" for="txtSurname" value="#{msg.surname}"/>
+                                <div class="col-sm-9">
+                                    <h:inputText styleClass="form-control" id="txtSurname" required="true" style="text-transform:uppercase;"
+                                                 value="#{customerBean.customer.surname}" converter="toUpperCaseConverter"/>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <p:outputLabel styleClass="control-label col-sm-3" for="txtUserNameCust" value="#{msg.username}"/>
+                                <div class="col-sm-9">
+                                    <h:inputText styleClass="form-control" required="true" id="txtUserNameCust" value="#{customerBean.customer.userName}"/>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <p:outputLabel styleClass="control-label col-sm-3" for="txtPasswordCust" value="#{msg.password}"/>
+                                <div class="col-sm-9">
+                                    <h:inputSecret styleClass="form-control" id="txtPasswordCust" value="#{customerBean.customer.password}"/>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <p:outputLabel styleClass="control-label col-sm-3" for="txtBirthdate" value="#{msg.birthdate}"/>
+                                <div class="col-sm-9">
+                                    <h:inputText styleClass="form-control date" id="txtBirthdate" required="true" placeholder="dd/mm/yyyy"
+                                                 value="#{customerBean.customer.birthdate}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy" type="date"/>
+                                    </h:inputText>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <p:outputLabel styleClass="control-label col-sm-3" for="txtMobilePhone" value="#{msg.mobilePhone}"/>
+                                <div class="col-sm-9">
+                                    <h:inputText styleClass="form-control" id="txtMobilePhone" style="text-transform:uppercase;"
+                                                 value="#{customerBean.customer.mobilePhone}"/>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <p:outputLabel styleClass="control-label col-sm-3" for="txtEmail" value="#{msg.email}"/>
+                                <div class="col-sm-9">
+                                    <h:inputText styleClass="form-control" id="txtEmail" required="true" value="#{customerBean.customer.email}"/>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <p:outputLabel styleClass="control-label col-sm-3" for="txtEmail" value="#{msg.gender}"/>
+                                <div class="col-sm-9">
+                                    <h:selectOneRadio value="#{customerBean.customer.gender}" required="true" styleClass="table-condensed">
+                                        <f:selectItem itemValue="M" itemLabel=" Masculino"/>
+                                        <f:selectItem itemValue="F" itemLabel=" Femenino"/>
+                                    </h:selectOneRadio>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <p:outputLabel styleClass="control-label col-sm-3" for="cbEstado" value="#{msg.status}"/>
+                                <div class="col-sm-9">
+                                    <h:selectOneMenu styleClass="select form-control" id="cbEstado" required="true" value="#{customerBean.customer.status}">
+                                        <f:selectItems value="#{customerBean.estados}"/>
+                                    </h:selectOneMenu>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <h:commandLink class="btn btn-primary" action="#{customerBean.guardar}">
+                                <i class="fa fa-save"/> #{msg.guardar}
+                                <p:ajax process="fmEditCustomer"
+                                        update="@form :fmCustomers"
+                                        oncomplete="handleSubmitHide(xhr, status, args, 'dlgEditCustomer')"/>
+                            </h:commandLink>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                <i class="fa fa-close"/> #{msg.cancelar}
+                            </button>
+                        </div>
+                        <h:outputScript>
+                            $('select').selectpicker();
+                            $('input.date').datepicker({
+                                weekStart: 0,
+                                language: "es",
+                                autoclose: true
+                            });
+                        </h:outputScript>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+
+        <ui:include src="address.xhtml" />
+
+    </ui:define>
+</ui:composition>

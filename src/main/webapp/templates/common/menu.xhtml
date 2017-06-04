@@ -8,20 +8,33 @@
     <section class="sidebar">
 
         <!-- sidebar menu: : style can be found in sidebar.less -->
-        <c:set var="currentPage"
-               value="#{facesContext.viewRoot.viewId}#{(empty request.queryString)?'':'?'.concat(request.queryString)}"/>
+        <c:set var="currentPage" value="#{facesContext.viewRoot.viewId}#{(empty request.queryString)?'':'?'.concat(request.queryString)}"/>
 
         <ul class="sidebar-menu">
             <li class="header">#{msg.menuMain}</li>
-            <li class="treeview #{fn:contains(currentPage,'admin')?'active':''}"
-                jsf:rendered="#{sec:ifAnyGranted('ADMIN_MOD')}">
+            <li class="treeview #{fn:contains(currentPage,'admin')?'active':''}" jsf:rendered="#{sec:ifAnyGranted('ADMIN_MOD')}">
                 <a href="#">
                     <i class="fa fa-lock"/> <span>Administracion</span> <i class="fa fa-angle-left pull-right"/>
                 </a>
                 <ul class="treeview-menu ">
-                    <li class="#{fn:contains(currentPage,'banco.xhtml')?'active':''}"
-                        jsf:rendered="#{sec:ifAnyGranted('BANCO_LIST')}">
-                        <a jsf:outcome="/pages/admin/banco.html"><i class="fa fa-circle-o"/> #{msg.banco}</a>
+                    <li class="#{fn:contains(currentPage,'category.xhtml')?'active':''}">
+                        <a jsf:outcome="/pages/admin/category.html"><i class="fa fa-circle-o"/> #{msg.category}</a>
+                    </li>
+                    <li class="#{fn:contains(currentPage,'product.xhtml')?'active':''}">
+                        <a jsf:outcome="/pages/admin/product.html"><i class="fa fa-circle-o"/> #{msg.product}</a>
+                    </li>
+                    <li class="#{fn:contains(currentPage,'branch.xhtml')?'active':''}">
+                        <a jsf:outcome="/pages/admin/branch.html"><i class="fa fa-circle-o"/> #{msg.branch}</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="treeview #{fn:contains(currentPage,'delivery')?'active':''}" jsf:rendered="#{sec:ifAnyGranted('ADMIN_MOD')}">
+                <a href="#">
+                    <i class="fa fa-lock"/> <span>Delivery</span> <i class="fa fa-angle-left pull-right"/>
+                </a>
+                <ul class="treeview-menu ">
+                    <li class="#{fn:contains(currentPage,'customer.xhtml')?'active':''}">
+                        <a jsf:outcome="/pages/delivery/customer.html"><i class="fa fa-circle-o"/> #{msg.customer}</a>
                     </li>
                 </ul>
             </li>

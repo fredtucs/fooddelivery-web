@@ -12,7 +12,7 @@ WHEN (new.codigo IS NULL)
     FROM t_comprobantepago cp
       LEFT JOIN t_expedientepago ep
         ON ep.idexpedientepago = cp.idexpedientepago
-    WHERE cp.estado <> -1
+    WHERE cp.status <> -1
           AND ep.idtipocuenta = (SELECT tc.idtipocuenta
                                  FROM t_expedientepago e
                                    LEFT JOIN t_tipocuenta tc
@@ -40,7 +40,7 @@ WHEN (new.NRODOCUMENTO IS NULL AND new.TIPODOCUMENTO = 1)
     FROM t_comprobantepago cp
       LEFT JOIN t_expedientepago ep
         ON ep.idexpedientepago = cp.idexpedientepago
-    WHERE cp.estado <> -1
+    WHERE cp.status <> -1
           AND ep.idtipocuenta = (SELECT tc.idtipocuenta
                                  FROM t_expedientepago e
                                    LEFT JOIN t_tipocuenta tc

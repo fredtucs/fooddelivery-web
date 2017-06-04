@@ -26,15 +26,15 @@ public abstract class BaseEntity implements Cloneable, Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModifiedDate;
 
-    @Type(type = Estado.EstadoConverter.NAME)
+    @Type(type = Status.StatusConverter.NAME)
     @Column(length = 2)
-    private Estado estado;
+    private Status status;
 
     public BaseEntity() {
     }
 
-    public BaseEntity(Estado estado) {
-        this.estado = estado;
+    public BaseEntity(Status status) {
+        this.status = status;
     }
 
     public String getCreatedBy() {
@@ -69,12 +69,12 @@ public abstract class BaseEntity implements Cloneable, Serializable {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public Estado getEstado() {
-        return estado;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setEstado(Estado estado) {
-        this.estado = estado;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
 }

@@ -49,12 +49,12 @@ public class Role extends BaseEntity implements GrantedAuthority {
     public Role() {
     }
 
-    public Role(String descripcion, String roleName, Role parentRole, Boolean admin, Estado estado) {
+    public Role(String descripcion, String roleName, Role parentRole, Boolean admin, Status status) {
         this.descripcion = descripcion;
         this.roleName = roleName;
         this.parentRole = parentRole;
         this.admin = admin;
-        setEstado(estado);
+        setStatus(status);
     }
 
     public Role(String descripcion) {

@@ -45,7 +45,7 @@
         <level value="error"/>
     </logger>
     <logger name="org.hibernate.tool.hbm2ddl">
-        <level value="debug"/>
+        <level value="error"/>
     </logger>
     <logger name="org.hibernate.SQL">
         <level value="debug"/>

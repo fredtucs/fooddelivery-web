@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>pe.wifry.fooddelivery</groupId>
+    <groupId>pe.wifry</groupId>
     <artifactId>fooddelivery</artifactId>
     <version>1.0.0</version>
     <packaging>war</packaging>
@@ -17,10 +17,12 @@
         <spring-webflow.version>2.4.0.RELEASE</spring-webflow.version>
         <jsf.version>2.2.13</jsf.version>
         <c3p0.version>0.9.1.2</c3p0.version>
-        <hsqldb.version>2.3.4</hsqldb.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <aspectj.version>1.7.0</aspectj.version>
         <jackson.version>2.6.3</jackson.version>
+        <springfox.version>2.5.0</springfox.version>
+
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -69,7 +71,7 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>font-awesome</artifactId>
-            <version>4.6.3</version>
+            <version>4.7.0</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
@@ -80,6 +82,11 @@
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap-datepicker</artifactId>
             <version>1.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>timepicker</artifactId>
+            <version>1.11.5</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
@@ -218,7 +225,7 @@
 
         <dependency>
             <groupId>org.springframework.security</groupId>
-            <artifactId>facelets-taglib-jsf2-spring</artifactId>
+            <artifactId>facelets-taglib-jsf20-spring-3</artifactId>
             <version>0.6</version>
         </dependency>
 
@@ -245,13 +252,6 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
-        </dependency>
-
-        <!-- Oracle -->
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc6</artifactId>
-            <version>11.2.0.3</version>
         </dependency>
 
         <!-- connection pooling with tomcat -->
@@ -337,7 +337,6 @@
             <version>2.6.1</version>
         </dependency>
 
-
         <!--Test-->
         <dependency>
             <groupId>junit</groupId>
@@ -391,9 +390,6 @@
                     <!--<exclude>**/*.sql</exclude>-->
                     <exclude>**/*.jrxml</exclude>
                 </excludes>
-                <!--<includes>-->
-                <!--<include>**/sites/**/*</include>-->
-                <!--</includes>-->
             </resource>
         </resources>
         <plugins>
@@ -402,17 +398,37 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.2</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <compilerArgument>-proc:none</compilerArgument>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.4</version>
+                <version>2.6</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/java/</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Tomcat plugin for embedded tomcat -->
@@ -421,12 +437,124 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <path>/${project.build.finalName}</path>                    
+                    <path>/${project.build.finalName}</path>
                     <ignorePackaging>true</ignorePackaging>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+
+    <profiles>
+
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <jdbc.url><![CDATA[jdbc:postgresql://localhost:5432/dbfood]]></jdbc.url>
+                <jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
+                <jdbc.username>prueba</jdbc.username>
+                <jdbc.password>1234560</jdbc.password>
+
+                <log4j.level>DEBUG</log4j.level>
+
+                <spring.profiles.active>dev</spring.profiles.active>
+
+                <jpa.database>POSTGRESQL</jpa.database>
+                <jpa.showSql>false</jpa.showSql>
+
+                <hibernate.hbm2ddl.auto></hibernate.hbm2ddl.auto>
+                <hibernate.dialect>org.hibernate.dialect.PostgreSQL9Dialect</hibernate.dialect>
+
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                    <version>9.4.1209</version>
+                </dependency>
+            </dependencies>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources-dev</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <profile>
+            <id>dev-start</id>
+            <properties>
+                <jdbc.url><![CDATA[jdbc:postgresql://localhost:5432/dbfood]]></jdbc.url>
+                <jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
+                <jdbc.username>prueba</jdbc.username>
+                <jdbc.password>1234560</jdbc.password>
+
+                <log4j.level>DEBUG</log4j.level>
+
+                <spring.profiles.active>dev</spring.profiles.active>
+
+                <jpa.database>POSTGRESQL</jpa.database>
+                <jpa.showSql>false</jpa.showSql>
+
+                <hibernate.hbm2ddl.auto>create</hibernate.hbm2ddl.auto>
+                <hibernate.dialect>org.hibernate.dialect.PostgreSQL9Dialect</hibernate.dialect>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                    <version>9.4.1209</version>
+                </dependency>
+            </dependencies>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources-dev</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <jdbc.url><![CDATA[jdbc:oracle:thin:@10.24.9.6:1521:ORCL]]></jdbc.url>
+                <jdbc.username>PRUEBA</jdbc.username>
+                <jdbc.password>123456</jdbc.password>
+                <jdbc.driverClassName>oracle.jdbc.driver.OracleDriver</jdbc.driverClassName>
+
+                <log4j.level>DEBUG</log4j.level>
+
+                <spring.profiles.active>prod</spring.profiles.active>
+
+                <jpa.database>ORACLE</jpa.database>
+                <jpa.showSql>false</jpa.showSql>
+
+                <hibernate.hbm2ddl.auto>create</hibernate.hbm2ddl.auto>
+                <hibernate.dialect>org.hibernate.dialect.Oracle10gDialect</hibernate.dialect>
+
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>com.oracle</groupId>
+                    <artifactId>ojdbc6</artifactId>
+                    <version>11.2.0.3</version>
+                </dependency>
+            </dependencies>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources-prod</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+    </profiles>
 
     <repositories>
 
@@ -435,7 +563,7 @@
             <url>https://code.lds.org/nexus/content/groups/main-repo</url>
         </repository>
         <repository>
-            <id>datapipeline-mvn-repo</id>
+            <id>mvn-repo-github</id>
             <url>https://raw.github.com/fredtucs/mvnrepository/mvn-repo/</url>
             <snapshots>
                 <enabled>true</enabled>
@@ -443,6 +571,5 @@
             </snapshots>
         </repository>
     </repositories>
-
 
 </project>

@@ -22,7 +22,9 @@ public interface BaseService<E> {
 
     List<E> listAll();
 
-    List<E> list();
+    default List<E> list() {
+        throw new UnsupportedOperationException("List is not implemented.");
+    }
 
     default List<E> find(String valor) {
         throw new UnsupportedOperationException("Find by value is not implemented.");

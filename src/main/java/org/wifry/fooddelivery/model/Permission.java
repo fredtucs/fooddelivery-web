@@ -32,11 +32,11 @@ public class Permission extends BaseEntity implements GrantedAuthority {
     public Permission() {
     }
 
-    public Permission(String descripcion, String permissionName, String url, Estado estado) {
+    public Permission(String descripcion, String permissionName, String url, Status status) {
         this.descripcion = descripcion;
         this.permissionName = permissionName;
         this.url = url;
-        setEstado(estado);
+        setStatus(status);
     }
 
     public Long getIdPermission() {

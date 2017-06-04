@@ -26,12 +26,12 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
     public void updateState(T entity) {
         StringBuilder hql = new StringBuilder("UPDATE ");
         hql.append(entity.getClass().getName());
-        hql.append(" SET estado = ?0 WHERE ");
+        hql.append(" SET status = ?0 WHERE ");
         Metadata metadata = HibernateMetadataUtil.getInstanceForEntityManagerFactory(em.getEntityManagerFactory()).get(entityClass);
         hql.append(metadata.getIdProperty());
         hql.append(" = ?1");
         Query query = em.createQuery(hql.toString());
-        query.setParameter(0, metadata.getPropertyValue(entity, "estado"));
+        query.setParameter(0, metadata.getPropertyValue(entity, "status"));
         query.setParameter(1, metadata.getIdValue(entity));
         query.executeUpdate();
     }

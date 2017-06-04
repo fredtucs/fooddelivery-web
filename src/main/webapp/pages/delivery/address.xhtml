@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ph="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:of="http://omnifaces.org/functions">
+
+    <div class="modal draggable fade" id="dlgListAddressCustomer" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <h:form id="fmListAddressCustomer">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="pull-right">
+                            <h:form>
+                                <h:commandLink class="btn btn-primary btn-xs" title="#{msg.nuevo} #{of:format1(msg.address, 0)} ">
+                                    <i class="fa fa-plus"/> #{msg.nuevo}
+                                    <p:ajax listener="#{customerBean.nuevoAddress}" update=":fmEditAddressCustomer" oncomplete="handleSubmitShow(xhr, status, args, 'dlgEditAddressCustomer')"/>
+                                </h:commandLink>
+                                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">
+                                    <i class="fa fa-close"/> #{msg.cerrar}
+                                </button>
+                            </h:form>
+                        </div>
+                        <h3 class="panel-title"><i class="fa fa-list"/> #{msg.listade} #{of:format1(msg.address, 2)}</h3>
+
+                    </div>
+                    <div class="panel-body">
+                        <p:messages id="messages" closable="true" globalOnly="true"/>
+                        <div class="table-responsive">
+                            <p:dataTable id="dtAddress" var="adr" reflow="true"
+                                         tableStyleClass="table table-bordered table-hover"
+                                         value="#{customerBean.customer.addresses}"
+                                         rowKey="#{adr.addressId}" rowIndexVar="rowIndex"
+                                         selection="#{customerBean.address}"
+                                         selectionMode="single" rows="15" paginator="true" paginatorPosition="bottom">
+
+                                <p:column headerText="#{of:format1(msg.address, 0)}" width="20%">
+                                    <h:outputText value="#{adr.addresstext}" style="white-space:normal;"/>
+                                </p:column>
+
+                                <p:column headerText="#{msg.country}" width="auto">
+                                    <h:outputText value="#{adr.country}" style="white-space:normal;"/>
+                                </p:column>
+
+                                <p:column headerText="#{msg.city}" width="auto">
+                                    <h:outputText value="#{adr.city}" style="white-space:normal;"/>
+                                </p:column>
+
+                                <p:column headerText="#{msg.district}" width="auto">
+                                    <h:outputText value="#{adr.district}" style="white-space:normal;"/>
+                                </p:column>
+
+                                <p:column headerText="..." width="10%"
+                                          style="text-align:center">
+                                    <h:commandLink styleClass="btn btn-default btn-xs" action="#{customerBean.editAddress}" title="#{msg.editar}">
+                                        <f:passThroughAttribute name="data-toggle" value="tooltip"/>
+                                        <i class="fa fa-pencil" aria-hidden="true"/>
+                                        <f:setPropertyActionListener target="#{customerBean.address}" value="#{adr}"/>
+                                        <p:ajax process="@this" oncomplete="handleSubmitShow(xhr, status, args, 'dlgEditAddressCustomer')"
+                                                update="dtAddress :fmEditAddressCustomer"/>
+                                    </h:commandLink>
+
+                                    <span data-toggle="tooltip" title="#{msg.eliminar}">
+                                    <h:commandLink styleClass="btn btn-default btn-xs btnConfirmDelete" ph:data-index="#{adr.addressId}"
+                                                   ph:data-entity-id="#{adr.addresstext}" ph:data-message="#{msg.msgEliminar}"
+                                                   ph:data-toggle="modal" ph:data-target="#dlgAddressConfirmDelete">
+                                        <i class="fa fa-trash" aria-hidden="true"/>
+                                        <p:ajax process="@this" update=":fmAddressConfirmDelete"/>
+                                    </h:commandLink>
+                                    </span>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </div>
+    </div>
+
+    <!-- Modal Dialog -->
+    <div class="modal draggable fade modalConfirmDelete" id="dlgAddressConfirmDelete" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <h:form role="form" id="fmAddressConfirmDelete">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#215;</button>
+                        <h4 class="modal-title">#{msg.eliminar} #{of:format1(msg.address, 0)}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="index" name="index"/>
+                        <p></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">#{msg.cancelar}</button>
+                        <h:commandLink styleClass="btn btn-danger" action="#{customerBean.eliminarAddress}">
+                            <i class="fa fa-pencil" aria-hidden="true"/> #{msg.eliminar}
+                            <p:ajax process="fmAddressConfirmDelete" oncomplete="handleSubmitHide(xhr, status, args, 'dlgAddressConfirmDelete')"/>
+                        </h:commandLink>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal draggable fade modalForm" id="dlgEditAddressCustomer" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <h:form id="fmEditAddressCustomer" styleClass="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&#215;</button>
+                        <h4 class="modal-title"><i class="fa fa-edit"/> #{msg.registro} #{of:format1(msg.address, 1)}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p:messages id="messagesfm" closable="true"/>
+                        <div class="form-group form-group-sm">
+                            <p:outputLabel styleClass="control-label col-sm-3" for="txtAddress" value="#{of:format1(msg.address, 0)}"/>
+                            <div class="col-sm-9">
+                                <h:inputText styleClass="form-control" id="txtAddress" required="true" style="text-transform:uppercase;"
+                                             value="#{customerBean.address.addresstext}" converter="toUpperCaseConverter"/>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <p:outputLabel styleClass="control-label col-sm-3" for="txtCountry" value="#{msg.country}"/>
+                            <div class="col-sm-9">
+                                <h:inputText styleClass="form-control" id="txtCountry" required="true" style="text-transform:uppercase;"
+                                             value="#{customerBean.address.country}" converter="toUpperCaseConverter"/>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <p:outputLabel styleClass="control-label col-sm-3" for="txtCity" value="#{msg.city}"/>
+                            <div class="col-sm-9">
+                                <h:inputText styleClass="form-control" required="true" id="txtCity" style="text-transform:uppercase;" converter="toUpperCaseConverter"
+                                             value="#{customerBean.address.city}"/>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <p:outputLabel styleClass="control-label col-sm-3" for="txtdistrict" value="#{msg.district}"/>
+                            <div class="col-sm-9">
+                                <h:inputText styleClass="form-control" required="true" id="txtdistrict" style="text-transform:uppercase;" converter="toUpperCaseConverter"
+                                             value="#{customerBean.address.district}"/>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <p:outputLabel styleClass="control-label col-sm-3" for="cbEstado" value="#{msg.status}"/>
+                            <div class="col-sm-9">
+                                <h:selectOneMenu styleClass="select form-control" id="cbEstado" required="true" value="#{customerBean.address.status}">
+                                    <f:selectItems value="#{customerBean.estados}"/>
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <h:commandLink class="btn btn-primary" action="#{customerBean.guardarAddress}">
+                            <i class="fa fa-save"/> #{msg.guardar}
+                            <p:ajax process="fmEditAddressCustomer"
+                                    update="@form :fmListAddressCustomer"
+                                    oncomplete="handleSubmitHide(xhr, status, args, 'dlgEditAddressCustomer')"/>
+                        </h:commandLink>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            <i class="fa fa-close"/> #{msg.cancelar}
+                        </button>
+                    </div>
+
+                </h:form>
+            </div>
+        </div>
+    </div>
+
+</ui:composition>

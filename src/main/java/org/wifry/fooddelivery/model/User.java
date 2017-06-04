@@ -73,7 +73,7 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
      *                                  collection
      */
     public User(String username, String password, boolean forceChangePasswd, boolean accountNonExpired,
-                boolean credentialsNonExpired, boolean accountNonLocked, Boolean admin, Set<Role> roles, Estado estado) {
+                boolean credentialsNonExpired, boolean accountNonLocked, Boolean admin, Set<Role> roles, Status status) {
 
         if (((username == null) || "".equals(username)) || (password == null)) {
             throw new IllegalArgumentException("Cannot pass null or empty values to constructor");
@@ -86,7 +86,7 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
         this.credentialsNonExpired = credentialsNonExpired;
         this.accountNonLocked = accountNonLocked;
         this.roles = roles;
-        setEstado(estado);
+        setStatus(status);
     }
 
     public Long getIdUser() {
@@ -146,7 +146,7 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
     }
 
     public boolean isEnabled() {
-        return getEstado().isActivo();
+        return getStatus().isActivo();
     }
 
     public Set<Role> getRoles() {

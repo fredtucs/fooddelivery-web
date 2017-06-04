@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ph="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:sec="http://www.springframework.org/security/facelets/tags" xmlns:of="http://omnifaces.org/functions"
+                template="/templates/layout/main-layout.xhtml">
+    <f:metadata>
+        <f:viewAction action="#{branchBean.listar}"/>
+    </f:metadata>
+    <ui:define name="content">
+
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="pull-right">
+                    <h:form>
+                        <h:commandLink class="btn btn-primary" title="#{msg.nuevo}">
+                            <i class="fa fa-plus"/>
+                            <p:ajax listener="#{branchBean.nuevo}" update=":fmEditBranch" oncomplete="handleSubmitShow(xhr, status, args, 'dlgEditBranch')"/>
+                        </h:commandLink>
+                    </h:form>
+                </div>
+                <h1>#{msg.branch}</h1>
+                <ul class="breadcrumb">
+                    <li><a jsf:outcome="/pages/home.html">#{msg.inicio}</a></li>
+                    <li class="active">#{msg.branch}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <h:form id="fmBranchies">
+                <p:messages id="messages" closable="true" globalOnly="true"/>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-list"/> #{msg.listade} #{msg.branch}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <p:dataTable id="dtBranchies" var="br" reflow="true"
+                                         tableStyleClass="table table-bordered table-hover"
+                                         value="#{branchBean.branchList}"
+                                         rowKey="#{br.branchId}" rowIndexVar="rowIndex"
+                                         selection="#{branchBean.branch}"
+                                         selectionMode="single" rows="15" paginator="true" paginatorPosition="bottom">
+
+                                <p:column headerText="#{of:format1(msg.nombre, 0)}" width="25%">
+                                    <h:outputText value="#{br.name}" style="white-space:normal;"/>
+                                </p:column>
+
+                                <p:column headerText="#{of:format1(msg.address, 0)}" width="auto">
+                                    <h:outputText value="#{br.branchAddress}" style="white-space:normal;"/>
+                                </p:column>
+
+                                <p:column headerText="..." width="10%"
+                                          style="text-align:center">
+                                    <h:commandLink styleClass="btn btn-default btn-xs" action="#{branchBean.editar}" title="#{msg.editar}">
+                                        <f:passThroughAttribute name="data-toggle" value="tooltip"/>
+                                        <i class="fa fa-pencil" aria-hidden="true"/>
+                                        <f:setPropertyActionListener target="#{branchBean.branch}" value="#{br}"/>
+                                        <p:ajax process="@this" oncomplete="handleSubmitShow(xhr, status, args, 'dlgEditBranch')"
+                                                update="dtBranchies :fmEditBranch"/>
+                                    </h:commandLink>
+
+                                    <span data-toggle="tooltip" title="#{msg.eliminar}">
+                                    <h:commandLink styleClass="btn btn-default btn-xs btnConfirmDelete" ph:data-index="#{br.branchId}"
+                                                   ph:data-entity-id="#{br.name}" ph:data-message="#{msg.msgEliminar}"
+                                                   ph:data-toggle="modal" ph:data-target="#dlgConfirmDelete">
+                                        <i class="fa fa-trash" aria-hidden="true"/>
+                                        <p:ajax process="@this" update=":fmConfirmDelete"/>
+                                    </h:commandLink>
+                                    </span>
+
+                                    <h:commandLink class="btn btn-default btn-xs" action="#{branchBean.editaEstado}"
+                                                   title="#{br.status.isActivo()? msg.activo : msg.inact}">
+                                        <f:passThroughAttribute name="data-toggle" value="tooltip"/>
+                                        <i class="fa #{br.status.isActivo()?'fa-check-square-o':'fa-square-o'}"/>
+                                        <f:setPropertyActionListener target="#{branchBean.branch}" value="#{br}"/>
+                                        <f:ajax execute="@this" render="dtBranchies"/>
+                                    </h:commandLink>
+                                </p:column>
+
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </div>
+
+        <!-- Modal Dialog -->
+        <div class="modal draggable fade modalConfirmDelete" id="dlgConfirmDelete" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <h:form role="form" id="fmConfirmDelete">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#215;</button>
+                            <h4 class="modal-title">#{msg.eliminar} #{msg.branch}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="index" name="index"/>
+                            <p></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">#{msg.cancelar}</button>
+                            <h:commandLink styleClass="btn btn-danger" action="#{branchBean.eliminar}">
+                                <i class="fa fa-pencil" aria-hidden="true"/> #{msg.eliminar}
+                                <p:ajax process="fmConfirmDelete" oncomplete="handleSubmitHide(xhr, status, args, 'dlgConfirmDelete')"/>
+                            </h:commandLink>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal draggable fade modalForm" id="dlgEditBranch" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <h:form id="fmEditBranch">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&#215;</button>
+                            <h4 class="modal-title"><i class="fa fa-edit"/> #{msg.registro} #{msg.branch}</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p:messages id="messagesfm" closable="true"/>
+                            <div class="form-group form-group-sm">
+                                <p:outputLabel styleClass="control-label" for="txtName" value="#{of:format1(msg.nombre, 0)}"/>
+                                <h:inputText styleClass="form-control" id="txtName" required="true" style="text-transform:uppercase;"
+                                             value="#{branchBean.branch.name}" converter="toUpperCaseConverter"/>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <p:outputLabel styleClass="control-label" for="txtAddress" value="#{of:format1(msg.address, 0)}"/>
+                                <h:inputText styleClass="form-control" id="txtAddress" style="text-transform:uppercase;"
+                                             value="#{branchBean.branch.branchAddress}" converter="toUpperCaseConverter"/>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <p:outputLabel styleClass="control-label" for="txtManagerName" value="#{msg.managerName}"/>
+                                <h:inputText styleClass="form-control" id="txtManagerName" style="text-transform:uppercase;"
+                                             value="#{branchBean.branch.managerName}" converter="toUpperCaseConverter"/>
+                            </div>
+                            <div class="form-group form-group-sm col-md-6">
+                                <p:outputLabel styleClass="control-label" for="txtOpenHour" value="#{msg.openHour}"/>
+                                <h:inputText styleClass="form-control time" id="txtOpenHour" style="text-transform:uppercase;"
+                                             value="#{branchBean.branch.openHour}">
+                                    <f:convertDateTime type="time" pattern="hh:mm"/>
+                                </h:inputText>
+                            </div>
+                            <div class="form-group form-group-sm col-md-6">
+                                <p:outputLabel styleClass="control-label" for="txtCloseHour" value="#{msg.closeHour}"/>
+                                <h:inputText styleClass="form-control time" id="txtCloseHour" style="text-transform:uppercase;"
+                                             value="#{branchBean.branch.closeHour}">
+                                    <f:convertDateTime type="time" pattern="hh:mm"/>
+                                </h:inputText>
+                            </div>
+                            <div class="form-group form-group-sm">
+                                <label class="control-label" for="cbEstado">#{msg.status}</label>
+                                <h:selectOneMenu styleClass="select form-control" id="cbEstado" required="true" value="#{branchBean.branch.status}">
+                                    <f:selectItems value="#{branchBean.estados}"/>
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <h:commandLink class="btn btn-primary" action="#{branchBean.guardar}">
+                                <i class="fa fa-save"/> #{msg.guardar}
+                                <p:ajax process="fmEditBranch"
+                                        update="@form :fmBranchies"
+                                        oncomplete="handleSubmitHide(xhr, status, args, 'dlgEditBranch')"/>
+                            </h:commandLink>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                <i class="fa fa-close"/> #{msg.cancelar}
+                            </button>
+                        </div>
+                    </div>
+                    <h:outputScript>
+                        $('select').selectpicker();
+                        $('input.time').timepicker({'scrollDefault': 'now'});
+                    </h:outputScript>
+                </h:form>
+            </div>
+        </div>
+
+    </ui:define>
+</ui:composition>

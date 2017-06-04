@@ -22,7 +22,7 @@ public class JUnitSpringExample {
     @Test
     public void testInsertCargo() {
 //        for (int i = 0; i < 5; i++) {
-//            Cargo cargo = new Cargo(Estado.ACTIVO, "Cargo " + (i + 1), "Descripción Cargo " + (i + 1));
+//            Cargo cargo = new Cargo(Status.ACTIVO, "Cargo " + (i + 1), "Descripción Cargo " + (i + 1));
 //            cargoService.save(cargo);
 //        }
     }

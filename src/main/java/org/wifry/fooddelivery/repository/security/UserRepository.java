@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface UserRepository extends BaseRepository<User, Long> {
 
-    @Query("SELECT u FROM User u WHERE u.estado = 1 order by u.username")
+    @Query("SELECT u FROM User u WHERE u.status = 1 order by u.username")
     List<User> listUsers();
 
 
