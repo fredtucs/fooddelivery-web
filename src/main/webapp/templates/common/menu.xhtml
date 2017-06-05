@@ -36,6 +36,9 @@
                     <li class="#{fn:contains(currentPage,'customer.xhtml')?'active':''}">
                         <a jsf:outcome="/pages/delivery/customer.html"><i class="fa fa-circle-o"/> #{msg.customer}</a>
                     </li>
+                    <li class="#{fn:contains(currentPage,'order.xhtml')?'active':''}">
+                        <a jsf:outcome="/pages/delivery/order.html"><i class="fa fa-circle-o"/> #{msg.order}</a>
+                    </li>
                 </ul>
             </li>
         </ul>

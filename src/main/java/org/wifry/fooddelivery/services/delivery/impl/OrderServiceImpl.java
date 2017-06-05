@@ -21,8 +21,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Order getOrderByIDForView(Long id) {
+        return orderRepository.findOrderByIdView(id);
+    }
+
+    @Override
     public List<Order> listAll() {
-        return orderRepository.findAll(new Sort(Sort.Direction.ASC, "startTime"));
+        return orderRepository.findAll();
     }
 
     @Override

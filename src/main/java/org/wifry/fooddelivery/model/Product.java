@@ -1,15 +1,11 @@
 package org.wifry.fooddelivery.model;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
-import java.util.Set;
+import java.util.List;
 import javax.persistence.*;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
-import org.hibernate.annotations.SQLDelete;
 
 @Entity
 @Table
@@ -47,7 +43,7 @@ public class Product extends BaseEntity {
 
     @OneToMany(fetch = FetchType.LAZY, targetEntity = ProductHistory.class)
     @JoinColumn(name = "product_id")
-    private Set<ProductHistory> productHistorySet;
+    private List<ProductHistory> productHistory;
 
     public Product() {
     }
@@ -112,12 +108,12 @@ public class Product extends BaseEntity {
         this.bucket = bucket;
     }
 
-    public Set<ProductHistory> getProductHistorySet() {
-        return productHistorySet;
+    public List<ProductHistory> getProductHistory() {
+        return productHistory;
     }
 
-    public void setProductHistorySet(Set<ProductHistory> productHistorySet) {
-        this.productHistorySet = productHistorySet;
+    public void setProductHistory(List<ProductHistory> productHistory) {
+        this.productHistory = productHistory;
     }
 
     @Override

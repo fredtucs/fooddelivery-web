@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:of="http://omnifaces.org/functions" xmlns:mf="http://mindef.gob.pe/functions">
+    <style>
+        .form-control {
+            width: 90%;
+        }
+    </style>
+    <!-- Modal View Order-->
+    <div class="modal draggable fade modalForm" id="dlgfmViewOrder" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <h:form id="fmViewOrder" styleClass="form-horizontal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&#215;</button>
+                        <h4 class="modal-title"><i class="fa fa-vcard"/>
+                            <h:outputText value="#{msg.order} #{mf:leftPad(orderBean.order.orderId, 6, '0')}" style="white-space:normal;"/>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <p:messages id="messagesfm" closable="true"/>
+                        <fieldset class="entityData">
+                            <legend>Datos del #{msg.order}</legend>
+                            <div class="row">
+                                <div class="form-group form-group-sm">
+                                    <p:outputLabel styleClass="control-label col-sm-3" for="txtBranch" value="#{msg.branch}"/>
+                                    <div class="col-sm-9">
+                                        <h:outputText id="txtBranch" styleClass="form-control" value="#{orderBean.order.branch.name}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <p:outputLabel styleClass="control-label col-sm-3" for="txtCustomer" value="#{msg.customer}"/>
+                                    <div class="col-sm-9">
+                                        <h:outputText id="txtCustomer" styleClass="form-control" value="#{orderBean.order.customer.name} #{orderBean.order.customer.surname}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <p:outputLabel styleClass="control-label col-sm-3" for="cbAddress" value="#{of:format1(msg.address, 0)}"/>
+                                    <div class="col-sm-9">
+                                        <h:outputText id="cbAddress" styleClass="form-control" value="#{orderBean.order.address.addresstext}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <p:outputLabel styleClass="control-label col-sm-3" for="txtPromoCode" value="#{msg.promoCode}"/>
+                                    <div class="col-sm-9">
+                                        <h:outputText id="txtPromoCode" styleClass="form-control" value="#{orderBean.order.promoCodeId}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <p:outputLabel styleClass="control-label col-sm-3" for="txtPaymentStatus" value="#{msg.paymentStatus}"/>
+                                    <div class="col-sm-9">
+                                        <h:outputText id="txtPaymentStatus" styleClass="form-control" value="#{orderBean.order.paymentStatus.toString()}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>
+                                <h:outputText value="#{of:format1(msg.order, 0)}es"/>
+                            </legend>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h:panelGroup id="tbComprobantes" styleClass="table-responsive">
+                                        <table class="table table-hover table-sm table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th width="30%">#{msg.product}</th>
+                                                <th width="10%">#{msg.price}</th>
+                                                <th width="15%">#{msg.quantity}</th>
+                                                <th width="15%">#{msg.importe}</th>
+                                                <th width="3%" style="text-align: center"><h:outputText value="..." title="#{msg.acciones}"/></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <ui:repeat value="#{orderBean.order.orderDetails}" var="od" varStatus="status">
+                                                <tr>
+                                                    <td>
+                                                        <h:outputText value="#{od.product.name}"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <h:outputText value="#{od.unitPrice}" converter="bigDecimalConverter"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <h:outputText value="#{od.unitCount}"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <h:outputText value="#{od.orderPrice}" converter="bigDecimalConverter"/>
+                                                    </td>
+                                                </tr>
+                                            </ui:repeat>
+                                            </tbody>
+                                        </table>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            <i class="fa fa-close"/> #{msg.aceptar}
+                        </button>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+    </div>
+
+</ui:composition>

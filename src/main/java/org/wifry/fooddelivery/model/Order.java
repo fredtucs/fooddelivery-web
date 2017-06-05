@@ -4,6 +4,7 @@ package org.wifry.fooddelivery.model;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -51,7 +52,7 @@ public class Order extends BaseEntity {
     private BigDecimal cost;
 
     @OneToMany(mappedBy = "order", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = OrderDetail.class)
-    private Set<OrderDetail> orderDetails;
+    private List<OrderDetail> orderDetails;
 
     public Order() {
     }
@@ -140,43 +141,40 @@ public class Order extends BaseEntity {
         this.cost = cost;
     }
 
-    public Set<OrderDetail> getOrderDetails() {
+    public List<OrderDetail> getOrderDetails() {
         return orderDetails;
     }
 
-    public void setOrderDetails(Set<OrderDetail> orderDetails) {
+    public void setOrderDetails(List<OrderDetail> orderDetails) {
         this.orderDetails = orderDetails;
     }
 
-
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((orderId == null) ? 0 : orderId.hashCode());
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Order)) return false;
+
+        Order order = (Order) o;
+
+        if (orderId != null ? !orderId.equals(order.orderId) : order.orderId != null) return false;
+        if (paymentType != order.paymentType) return false;
+        if (paymentStatus != order.paymentStatus) return false;
+        if (promoCodeId != null ? !promoCodeId.equals(order.promoCodeId) : order.promoCodeId != null) return false;
+        if (startTime != null ? !startTime.equals(order.startTime) : order.startTime != null) return false;
+        if (endTime != null ? !endTime.equals(order.endTime) : order.endTime != null) return false;
+        return cost != null ? cost.equals(order.cost) : order.cost == null;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        Order other = (Order) obj;
-        if (orderId == null) {
-            if (other.orderId != null) {
-                return false;
-            }
-        } else if (!orderId.equals(other.orderId)) {
-            return false;
-        }
-        return true;
+    public int hashCode() {
+        int result = orderId != null ? orderId.hashCode() : 0;
+        result = 31 * result + (paymentType != null ? paymentType.hashCode() : 0);
+        result = 31 * result + (paymentStatus != null ? paymentStatus.hashCode() : 0);
+        result = 31 * result + (promoCodeId != null ? promoCodeId.hashCode() : 0);
+        result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
+        result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
+        result = 31 * result + (cost != null ? cost.hashCode() : 0);
+        return result;
     }
 
     /*

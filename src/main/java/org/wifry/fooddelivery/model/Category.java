@@ -2,6 +2,7 @@ package org.wifry.fooddelivery.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -40,7 +41,7 @@ public class Category extends BaseEntity {
 
     @OneToMany(targetEntity = Product.class)
     @JoinColumn(name = "cat_id")
-    private Set<Product> products;
+    private List<Product> products;
 
     public Category() {
     }
@@ -55,7 +56,7 @@ public class Category extends BaseEntity {
         this.description = description;
     }
 
-    public Category(Long categoryId, String categoryName, String description, Set<Product> products) {
+    public Category(Long categoryId, String categoryName, String description, List<Product> products) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
         this.description = description;
@@ -87,11 +88,11 @@ public class Category extends BaseEntity {
     }
 
     @XmlTransient
-    public Set<Product> getProducts() {
+    public List<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(Set<Product> products) {
+    public void setProducts(List<Product> products) {
         this.products = products;
     }
 

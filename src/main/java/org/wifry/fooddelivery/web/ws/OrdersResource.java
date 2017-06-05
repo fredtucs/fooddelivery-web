@@ -19,10 +19,7 @@ import org.wifry.fooddelivery.web.ws.model.OrderProductModel;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.http.MediaType;
 
@@ -31,10 +28,10 @@ import org.springframework.http.MediaType;
 @Scope("request")
 public class OrdersResource {
 
-    private CustomerService customerService;
-    private BranchService branchService;
-    private ProductService productService;
-    private OrderService orderService;
+    private final CustomerService customerService;
+    private final BranchService branchService;
+    private final ProductService productService;
+    private final OrderService orderService;
 
     private static final Logger LOG = LoggerFactory.getLogger(OrdersResource.class);
 
@@ -59,7 +56,7 @@ public class OrdersResource {
             Branch b = branchService.getByID(Long.parseLong(content.getBranchId()));
             Customer c = customerService.getByID(Long.parseLong(content.getCustomerId()));
 
-            Set<OrderDetail> orderDetails = new HashSet<>();
+            List<OrderDetail> orderDetails = new ArrayList<>();
 
             List<OrderProductModel> productModels = content.getSendProModels();
             int proCount = content.getSendProModels().size();
@@ -69,6 +66,8 @@ public class OrdersResource {
             order.setAddress(a);
             order.setBranch(b);
             order.setCustomer(c);
+            order.setStatus(Status.ACTIVO);
+            order.setPaymentStatus(PaymentStatus.PENDING);
 
             Double totalPrice = 0D;
             for (OrderProductModel productModel : productModels) {

@@ -3,7 +3,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
                 xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:jsf="http://xmlns.jcp.org/jsf"
                 xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ph="http://xmlns.jcp.org/jsf/passthrough"
-                xmlns:of="http://omnifaces.org/functions" xmlns:mf="http://mindef.gob.pe/functions"
+                xmlns:mf="http://mindef.gob.pe/functions"
                 template="/templates/layout/main-layout.xhtml">
     <f:metadata>
         <f:viewAction action="#{orderBean.listar}"/>
@@ -16,7 +16,7 @@
                     <h:form>
                         <h:commandLink class="btn btn-primary" title="#{msg.nuevo}">
                             <i class="fa fa-plus"/>
-                            <p:ajax listener="#{orderBean.nuevo}" update=":fmEditOrder" oncomplete="handleSubmitShow(xhr, status, args, 'dlgEditOrder')"/>
+
                         </h:commandLink>
                     </h:form>
                 </div>
@@ -74,12 +74,12 @@
                                 <p:column headerText="..." width="10%"
                                           style="text-align:center">
 
-                                    <h:commandLink styleClass="btn btn-default btn-xs" action="#{orderBean.editar}" title="#{msg.editar}">
+                                    <h:commandLink styleClass="btn btn-default btn-xs" action="#{orderBean.ver}" title="#{msg.ver}">
                                         <f:passThroughAttribute name="data-toggle" value="tooltip"/>
-                                        <i class="fa fa-pencil" aria-hidden="true"/>
+                                        <i class="fa fa-file-text-o" aria-hidden="true"/>
                                         <f:setPropertyActionListener target="#{orderBean.order}" value="#{ord}"/>
-                                        <p:ajax process="@this" oncomplete="handleSubmitShow(xhr, status, args, 'dlgEditOrder')"
-                                                update="dtOrders :fmEditOrder"/>
+                                        <p:ajax process="@this" oncomplete="handleSubmitShow(xhr, status, args, 'dlgfmViewOrder')"
+                                                update="dtOrders :fmViewOrder"/>
                                     </h:commandLink>
 
                                     <span data-toggle="tooltip" title="#{msg.eliminar}">
@@ -90,9 +90,7 @@
                                         <p:ajax process="@this" update=":fmConfirmDelete"/>
                                     </h:commandLink>
                                     </span>
-
                                 </p:column>
-
                             </p:dataTable>
                         </div>
                     </div>
@@ -125,151 +123,7 @@
             </div>
         </div>
 
+        <ui:include src="orderView.xhtml"/>
 
-        <!-- Modal -->
-        <div class="modal draggable fade modalForm" id="dlgEditOrder" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <h:form id="fmEditOrder" styleClass="form-horizontal">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&#215;</button>
-                            <h4 class="modal-title"><i class="fa fa-edit"/> #{msg.registro} #{msg.order}</h4>
-                        </div>
-                        <div class="modal-body">
-                            <p:messages id="messagesfm" closable="true"/>
-                            <fieldset class="entityData">
-                                <legend>Datos del #{msg.order}</legend>
-                                <div class="row">
-                                    <div class="form-group form-group-sm">
-                                        <p:outputLabel styleClass="control-label col-sm-3" for="txtBranch" value="#{msg.branch}"/>
-                                        <div class="col-sm-9">
-                                            <p:autoComplete id="txtBranch" required="true" value="#{orderBean.order.branch}" dropdown="true"
-                                                            completeMethod="#{orderBean.autoComplete}" inputStyle="text-transform:uppercase;"
-                                                            var="bran" itemLabel="#{bran.name}" itemValue="#{bran}"
-                                                            converter="toUpperCaseConverter" minQueryLength="3" appendTo="txtBranch"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group form-group-sm">
-                                        <p:outputLabel styleClass="control-label col-sm-3" for="txtCustomer" value="#{msg.customer}"/>
-                                        <div class="col-sm-9">
-                                            <p:autoComplete id="txtCustomer" required="true" value="#{orderBean.order.customer}"
-                                                            completeMethod="#{orderBean.autoCompleteCustomer}" inputStyle="text-transform:uppercase;"
-                                                            var="ctm" itemLabel="#{ctm.name} #{ctm.surname}" itemValue="#{ctm}"
-                                                            converter="toUpperCaseConverter" minQueryLength="3" appendTo="txtCustomer">
-                                                <p:ajax event="itemSelect" update="cbAddress"/>
-                                            </p:autoComplete>
-                                        </div>
-                                    </div>
-                                    <div class="form-group form-group-sm">
-                                        <p:outputLabel styleClass="control-label col-sm-3" for="cbAddress" value="#{of:format1(msg.address, 0)}"/>
-                                        <div class="col-sm-9">
-                                            <h:selectOneMenu id="cbAddress" styleClass="select form-control" required="true" value="#{orderBean.order.address}"
-                                                             converter="omnifaces.SelectItemsConverter">
-                                                <f:selectItems value="#{orderBean.order.customer.addresses}" var="b" itemLabel="#{b.addresstext}" itemValue="#{b}"/>
-                                            </h:selectOneMenu>
-                                        </div>
-                                    </div>
-                                    <div class="form-group form-group-sm">
-                                        <p:outputLabel styleClass="control-label col-sm-3" for="txtPromoCode" value="#{msg.promoCode}"/>
-                                        <div class="col-sm-9">
-                                            <h:inputText styleClass="form-control" id="txtPromoCode" value="#{orderBean.order.promoCodeId}"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group form-group-sm">
-                                        <p:outputLabel styleClass="control-label col-sm-3" for="cbEstado" value="#{msg.status}"/>
-                                        <div class="col-sm-9">
-                                            <h:selectOneMenu styleClass="select form-control" id="cbEstado" required="true" value="#{orderBean.order.status}">
-                                                <f:selectItems value="#{orderBean.estados}"/>
-                                            </h:selectOneMenu>
-                                        </div>
-                                    </div>
-                                </div>
-                            </fieldset>
-                            <fieldset>
-                                <legend>
-                                    <h:outputText value="#{of:format1(msg.order, 0)}es"/>
-                                    <h:panelGroup styleClass="pull-right" layout="block">
-                                        <h:commandLink class="btn btn-primary btn-xs" title="#{msg.nuevo} #{msg.order} ">
-                                            <i class="fa fa-plus"/> #{msg.nuevo}
-                                            <p:ajax listener="#{orderBean.addOrder}" update=":fmEditOrderDetail" oncomplete="handleSubmitShow(xhr, status, args, 'dlgEditEditOrderDetail')"/>
-                                        </h:commandLink>
-                                    </h:panelGroup>
-                                    <h:panelGroup styleClass="clearfix" layout="block"/>
-                                </legend>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <h:panelGroup id="tbComprobantes" styleClass="table-responsive">
-                                            <h:inputHidden required="true" requiredMessage="#{msg.errOrderDetail}"
-                                                           value="#{null}" rendered="#{empty orderBean.order.orderDetails}"/>
-                                            <table class="table table-hover table-sm table-bordered">
-                                                <thead>
-                                                <tr>
-                                                    <th width="30%">#{msg.product}</th>
-                                                    <th width="10%">#{msg.price}</th>
-                                                    <th width="15%">#{msg.quantity}</th>
-                                                    <th width="15%">#{msg.importe}</th>
-                                                    <th width="3%" style="text-align: center"><h:outputText value="..." title="#{msg.acciones}"/></th>
-                                                </tr>
-                                                </thead>
-                                                <tbody jsf:id="deeee">
-                                                <ui:repeat value="#{orderBean.order.orderDetails}" var="od" varStatus="status">
-                                                    <tr>
-                                                        <td>
-                                                            <h:outputText value="#{od.product.name}"/>
-                                                        </td>
-                                                        <td>
-                                                            <h:outputText value="#{od.unitPrice}" converter="bigDecimalConverter"/>
-                                                        </td>
-                                                        <td>
-                                                            <h:inputText value="#{od.unitCount}" valueChangeListener="#{orderBean.doValueChangeQuantity}">
-                                                                <p:ajax update="deeee"/>
-                                                            </h:inputText>
-                                                        </td>
-                                                        <td class="text-right">
-                                                            <h:outputText value="#{od.orderPrice}" converter="bigDecimalConverter"/>
-                                                        </td>
-                                                        <td style="text-align: center">
-                                                            <span data-toggle="tooltip" title="#{msg.eliminar}">
-                                                            <h:commandLink styleClass="btnConfirmDelete" ph:data-index="#{status.index}"
-                                                                           ph:data-entity-id="#{od.product.name}" ph:data-message="#{msg.msgEliminar}"
-                                                                           ph:data-toggle="modal" ph:data-target="#dlgConfirmDelete">
-                                                                <i class="fa fa-trash" aria-hidden="true"/> #{msg.eliminar}
-                                                                <p:ajax process="@this" update=":fmConfirmDelete"/>
-                                                            </h:commandLink>
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                </ui:repeat>
-                                                </tbody>
-                                            </table>
-                                        </h:panelGroup>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </div>
-                        <div class="modal-footer">
-                            <h:commandLink class="btn btn-primary" action="#{orderBean.guardar}">
-                                <i class="fa fa-save"/> #{msg.guardar}
-                                <p:ajax process="fmEditOrder"
-                                        update="@form :fmOrders"
-                                        oncomplete="handleSubmitHide(xhr, status, args, 'dlgEditOrder')"/>
-                            </h:commandLink>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">
-                                <i class="fa fa-close"/> #{msg.cancelar}
-                            </button>
-                        </div>
-                        <h:outputScript>
-                            $('select').selectpicker();
-                            $('input.date').datepicker({
-                                weekStart: 0,
-                                language: "es",
-                                autoclose: true
-                            });
-                        </h:outputScript>
-                    </h:form>
-                </div>
-            </div>
-        </div>
     </ui:define>
 </ui:composition>

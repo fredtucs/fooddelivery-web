@@ -7,4 +7,5 @@ import org.wifry.fooddelivery.services.BaseService;
 
 public interface OrderService extends BaseService<Order> {
 
+    Order getOrderByIDForView(Long id);
 }

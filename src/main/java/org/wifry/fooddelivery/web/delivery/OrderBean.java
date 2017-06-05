@@ -68,6 +68,16 @@ public class OrderBean implements Serializable {
         }
     }
 
+    public void ver() {
+        if (order != null && order.getOrderId() != 0L) {
+            order = orderService.getOrderByIDForView(order.getOrderId());
+            FacesUtils.reset("fmViewOrder");
+        } else {
+            FacesUtils.addWarnigMessage(msg.getString("errEmptyObj"));
+            FacesContext.getCurrentInstance().validationFailed();
+        }
+    }
+
     public void buscar() {
         orderList = orderService.find(getValorBuscar());
     }

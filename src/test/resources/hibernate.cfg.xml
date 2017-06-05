@@ -2,19 +2,13 @@
 <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-    <session-factory name="sitesdb">
+    <session-factory name="fooddeliverydb">
 
-        <property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
-        <property name="connection.url">jdbc:oracle:thin:@10.24.9.6:1521:orcl</property>
-        <property name="connection.username">SITESDEV</property>
+        <property name="connection.driver_class">org.postgresql.Driver</property>
+        <property name="connection.url">jdbc:postgresql://localhost:5432/dbfood</property>
+        <property name="connection.username">prueba</property>
         <property name="connection.password">1234560</property>
-        <property name="dialect">org.hibernate.dialect.Oracle10gDialect</property>
-
-        <!--<property name="connection.driver_class">com.mysql.jdbc.Driver</property>-->
-        <!--<property name="connection.url">jdbc:mysql://localhost/sitesdb</property>-->
-        <!--<property name="connection.username">root</property>-->
-        <!--<property name="connection.password"></property>-->
-        <!--<property name="dialect">org.hibernate.dialect.MySQLDialect</property>-->
+        <property name="dialect">org.hibernate.dialect.PostgreSQL9Dialect</property>
 
         <!-- Configuracion del pool interno -->
         <property name="connection.pool_size">1</property>
