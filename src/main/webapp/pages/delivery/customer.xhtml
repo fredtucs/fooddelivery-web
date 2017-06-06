@@ -59,8 +59,10 @@
                                     <h:outputText value="#{cs.userName}" style="white-space:normal;"/>
                                 </p:column>
 
-                                <p:column headerText="#{msg.birthdate}" width="auto">
-                                    <h:outputText value="#{cs.birthdate}" style="white-space:normal;"/>
+                                <p:column headerText="#{msg.birthdate}" width="10%" style="text-align:center">
+                                    <h:outputText value="#{cs.birthdate}" style="white-space:normal;">
+                                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                    </h:outputText>
                                 </p:column>
 
                                 <p:column headerText="..." width="10%"
@@ -228,7 +230,7 @@
             </div>
         </div>
 
-        <ui:include src="address.xhtml" />
+        <ui:include src="address.xhtml"/>
 
     </ui:define>
 </ui:composition>

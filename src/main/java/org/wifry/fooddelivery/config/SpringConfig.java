@@ -14,7 +14,7 @@ import org.wifry.fooddelivery.base.BaseRepositoryFactoryBean;
  */
 @Configuration
 @EnableJpaRepositories(basePackages = "org.wifry.fooddelivery.repository", repositoryFactoryBeanClass = BaseRepositoryFactoryBean.class)
-@ComponentScan(basePackages = {"org.wifry.fooddelivery.services", "org.wifry.fooddelivery.repository",
+@ComponentScan(basePackages = {"org.wifry.fooddelivery.services", "org.wifry.fooddelivery.repository", "org.wifry.fooddelivery.fcm",
         "org.wifry.fooddelivery.security", "org.wifry.fooddelivery.web", "org.wifry.fooddelivery.audit", "org.wifry.fooddelivery.util.converts"})
 @ImportResource(value = {"classpath:applicationContext-database.xml", "classpath*:applicationContext-servlet.xml"})
 @Import({SpringSecurityConfig.class})

@@ -59,6 +59,9 @@ public class Customer extends BaseEntity {
     @Column(name = "token", length = 250)
     private String token;
 
+    @Column(name = "tokenFCM", length = 400)
+    private String tokenFCM;
+
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Order.class)
     @JoinColumn(name = "cust_id")
     private Set<Order> orders;
@@ -158,6 +161,14 @@ public class Customer extends BaseEntity {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getTokenFCM() {
+        return tokenFCM;
+    }
+
+    public void setTokenFCM(String tokenFCM) {
+        this.tokenFCM = tokenFCM;
     }
 
     @XmlTransient

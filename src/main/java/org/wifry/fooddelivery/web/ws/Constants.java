@@ -17,6 +17,8 @@ public final class Constants {
 
     public static final String URI_ADDRESSES = "/addresses";
 
+    public static final String URI_CUSTOMERS = "/customers";
+
     public static final String URI_ACCOUNTS = "/accounts";
 
     public static final String URI_ORDERS = "/orders";

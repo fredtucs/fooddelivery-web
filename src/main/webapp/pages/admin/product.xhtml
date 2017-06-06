@@ -42,11 +42,13 @@
                                          selection="#{productBean.product}"
                                          selectionMode="single" rows="15" paginator="true" paginatorPosition="bottom">
 
-                                <p:column headerText="#{msg.product}" width="25%">
+                                <p:column headerText="#{msg.product}" width="35%">
                                     <h:outputText value="#{pd.name}" style="white-space:normal;"/>
                                 </p:column>
-
-                                <p:column headerText="#{msg.current_price}" width="auto">
+                                <p:column headerText="#{msg.descripcion}" width="auto" styleClass="truncate-ellipsis">
+                                    <h:outputText value="#{pd.proDescription}" style="white-space:nowrap;"/>
+                                </p:column>
+                                <p:column headerText="#{msg.current_price}" width="15%">
                                     <h:outputText value="#{pd.currentPrice}" style="white-space:normal;"/>
                                 </p:column>
 
@@ -54,7 +56,7 @@
                                     <h:outputText value="#{pd.category.categoryName}" style="white-space:normal;"/>
                                 </p:column>
 
-                                <p:column headerText="..." width="10%"
+                                <p:column headerText="..." width="15%"
                                           style="text-align:center">
                                     <h:commandLink styleClass="btn btn-default btn-xs" action="#{productBean.editar}" title="#{msg.editar}">
                                         <f:passThroughAttribute name="data-toggle" value="tooltip"/>

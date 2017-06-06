@@ -59,7 +59,7 @@
                         </fieldset>
                         <fieldset>
                             <legend>
-                                <h:outputText value="#{of:format1(msg.order, 0)}es"/>
+                                <h:outputText value="#{of:format1(msg.order, 0)} #{msg.detalle}"/>
                             </legend>
                             <div class="row">
                                 <div class="col-md-12">
@@ -71,7 +71,9 @@
                                                 <th width="10%">#{msg.price}</th>
                                                 <th width="15%">#{msg.quantity}</th>
                                                 <th width="15%">#{msg.importe}</th>
-                                                <th width="3%" style="text-align: center"><h:outputText value="..." title="#{msg.acciones}"/></th>
+                                                <th width="3%" style="text-align: center">
+                                                    <h:outputText value="..." title="#{msg.acciones}"/>
+                                                </th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -94,6 +96,10 @@
                                             </tbody>
                                         </table>
                                     </h:panelGroup>
+                                </div>
+                                <div class="col-md-12 text-right" style="font-weight: bold;">
+                                    <h:outputText value="TOTAL S/. "/>
+                                    <h:outputText id="txtTotal" value="#{orderBean.order.cost}" style="margin-right: 40px" converter="bigDecimalConverter"/>
                                 </div>
                             </div>
                         </fieldset>
